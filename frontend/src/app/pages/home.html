@@ -1,0 +1,843 @@
+<!-- Time-of-day / Section Dots Sidebar -->
+<aside class="dots" aria-label="Page sections">
+  @for (sec of sections; track sec.id; let i = $index) {
+    <a [href]="'#' + sec.id" (click)="go($event, sec.id)" [class.on]="scene.active() === i" [attr.aria-label]="sec.mood">
+      <span>{{ sec.nav }} &middot; {{ sec.mood }}</span><i></i>
+    </a>
+  }
+</aside>
+
+<!-- =========================================
+     01 / HERO SECTION (Full Viewport Cobalt + 3D Stack Carousel)
+     ========================================= -->
+<section id="home" data-sky class="hero">
+  <div class="container hero-container">
+    <!-- Left Column: Editorial Headline & Actions -->
+    <div class="hero-left">
+      <!-- Eyebrow Label -->
+      <div class="eyebrow eyebrow-light" appReveal>
+        <span class="sparkle-ico">✦</span>
+        <span>RAVENTIQ &middot; INTELLIGENCE MEETS INNOVATION</span>
+      </div>
+
+      <!-- Main Headline: Split across 3 lines -->
+      <h1 class="hero-title" appReveal="80">
+        <span class="hero-line">Building what</span>
+        <span class="hero-line"><span class="highlight-lime">moves the</span></span>
+        <span class="hero-line">future forward.</span>
+      </h1>
+
+      <!-- Supporting Description -->
+      <p class="lead lead-light" appReveal="160">
+        We turn ambitious ideas into intelligent products, AI-powered workflows, and digital experiences that move businesses forward.
+      </p>
+
+      <!-- CTAs -->
+      <div class="actions" appReveal="240">
+        <a href="#solutions" class="btn primary" appMagnetic (click)="go($event, 'solutions')">
+          <span>Explore Our Solutions</span>
+          <span aria-hidden="true">&nearr;</span>
+        </a>
+        <a href="#about" class="btn ghost-white" appMagnetic="0.25" (click)="go($event, 'about')">
+          <span>Discover Our Approach</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+
+      <!-- Bottom Horizontal Information Strip -->
+      <div class="hero-strip" appReveal="320">
+        <div class="strip-item">
+          <span class="strip-dot"></span>
+          <span>AI-powered innovation</span>
+        </div>
+        <div class="strip-item">
+          <span class="strip-dot"></span>
+          <span>Intelligent automation</span>
+        </div>
+        <div class="strip-item">
+          <span class="strip-dot"></span>
+          <span>Digital engineering</span>
+        </div>
+        <div class="strip-item">
+          <span class="strip-dot"></span>
+          <span>Built for what's next</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: 3D Layered Stack Carousel -->
+    <div
+      class="hero-right"
+      appReveal="180"
+      (mouseenter)="pauseHero(true)"
+      (mouseleave)="pauseHero(false)"
+    >
+      <div class="stack-3d-stage">
+        @for (panel of heroPanels; track panel.id; let i = $index) {
+          @let pos = getSlidePosition(i);
+          <article
+            #panelEl
+            class="stack-panel pos-{{ pos }} color-{{ panel.color }}"
+            [class.is-active]="pos === 0"
+            (click)="setHeroSlide(i)"
+          >
+            <!-- Panel Header -->
+            <div class="sp-header">
+              <div class="sp-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-amber"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <span class="sp-badge">{{ panel.badge }}</span>
+              <span class="sp-status">{{ panel.status }}</span>
+            </div>
+
+            <!-- Panel Content -->
+            <div class="sp-content">
+              <h3 class="sp-title">{{ panel.title }}</h3>
+              <p class="sp-subtitle">{{ panel.subtitle }}</p>
+
+              <!-- Panel Interactive Visual Element -->
+              <div class="sp-vis">
+                @if (panel.id === 'ai-core') {
+                  <div class="vis-ai-wave">
+                    <div class="wave-bars">
+                      <span class="wb b1"></span>
+                      <span class="wb b2"></span>
+                      <span class="wb b3"></span>
+                      <span class="wb b4"></span>
+                      <span class="wb b5"></span>
+                      <span class="wb b6"></span>
+                      <span class="wb b7"></span>
+                      <span class="wb b8"></span>
+                    </div>
+                    <div class="ai-node-link">
+                      <span class="node-pill">16kHz Audio Stream</span>
+                      <span class="node-arrow">&rarr;</span>
+                      <span class="node-pill highlight">Whisper V3 &middot; Qdrant</span>
+                    </div>
+                  </div>
+                } @else if (panel.id === 'agentic-swarm') {
+                  <div class="vis-swarm">
+                    <div class="swarm-node active">Controller</div>
+                    <div class="swarm-line"></div>
+                    <div class="swarm-node">Worker 01</div>
+                    <div class="swarm-node">Worker 02</div>
+                    <div class="swarm-badge">Auto-Reconcile 99.8%</div>
+                  </div>
+                } @else {
+                  <div class="vis-edge">
+                    <div class="edge-meter">
+                      <span class="meter-num">100</span>
+                      <span class="meter-lbl">Lighthouse Core</span>
+                    </div>
+                    <div class="edge-code">
+                      <code>&lt;EdgeWorker /&gt; 28ms TTFB</code>
+                    </div>
+                  </div>
+                }
+              </div>
+
+              <!-- Metrics Strip -->
+              <div class="sp-metrics">
+                <div class="sp-metric">
+                  <span class="sp-m-val">{{ panel.metric1.val }}</span>
+                  <span class="sp-m-lbl">{{ panel.metric1.lbl }}</span>
+                </div>
+                <div class="sp-metric">
+                  <span class="sp-m-val">{{ panel.metric2.val }}</span>
+                  <span class="sp-m-lbl">{{ panel.metric2.lbl }}</span>
+                </div>
+              </div>
+
+              <!-- Code Preview Snippet -->
+              <div class="sp-code">
+                <pre><code>{{ panel.code }}</code></pre>
+              </div>
+            </div>
+
+            <!-- Panel Footer Action -->
+            <div class="sp-footer">
+              <span class="sp-step">Slide 0{{ i + 1 }} / 03</span>
+              <span class="sp-explore">
+                <span>View Architecture</span>
+                <span class="sp-arrow">&nearr;</span>
+              </span>
+            </div>
+          </article>
+        }
+      </div>
+
+      <!-- Carousel Navigation Controls -->
+      <div class="stack-controls">
+        <button
+          type="button"
+          class="ctrl-btn"
+          (click)="prevHeroSlide()"
+          aria-label="Previous slide"
+        >
+          &larr;
+        </button>
+        <div class="ctrl-dots">
+          @for (panel of heroPanels; track panel.id; let i = $index) {
+            <button
+              type="button"
+              class="dot-indicator"
+              [class.active]="activeHeroSlide() === i"
+              (click)="setHeroSlide(i)"
+              [attr.aria-label]="'Go to slide ' + (i + 1)"
+            ></button>
+          }
+        </div>
+        <button
+          type="button"
+          class="ctrl-btn"
+          (click)="nextHeroSlide()"
+          aria-label="Next slide"
+        >
+          &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator Cue -->
+  <a class="cue" href="#marquee" (click)="go($event, 'marquee')" aria-label="Scroll down">
+    <span></span>
+  </a>
+</section>
+
+<!-- =========================================
+     ANIMATED HORIZONTAL MARQUEE (Neon Lime)
+     ========================================= -->
+<div id="marquee" class="marquee-strip" aria-label="Ticker ticker">
+  <div class="marquee-track">
+    <div class="marquee-phrase">THINK INTELLIGENTLY + BUILD BOLDLY + AUTOMATE WHAT’S NEXT + SCALING WHAT MOVES THE FUTURE +&nbsp;</div>
+    <div class="marquee-phrase">THINK INTELLIGENTLY + BUILD BOLDLY + AUTOMATE WHAT’S NEXT + SCALING WHAT MOVES THE FUTURE +&nbsp;</div>
+    <div class="marquee-phrase">THINK INTELLIGENTLY + BUILD BOLDLY + AUTOMATE WHAT’S NEXT + SCALING WHAT MOVES THE FUTURE +&nbsp;</div>
+    <div class="marquee-phrase">THINK INTELLIGENTLY + BUILD BOLDLY + AUTOMATE WHAT’S NEXT + SCALING WHAT MOVES THE FUTURE +&nbsp;</div>
+  </div>
+</div>
+
+<!-- =========================================
+     01 / SOLUTIONS (Editorial Card Design)
+     ========================================= -->
+<section id="solutions" data-sky class="section bg-offwhite">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow" appReveal>01 / WHAT WE DO</span>
+      <h2 appReveal="60">
+        Technology with<br />
+        purpose. Innovation<br />
+        <span class="text-cobalt">with impact.</span>
+      </h2>
+      <p class="lead" appReveal="120">
+        We bring together intelligent systems, thoughtful engineering, and creative problem-solving to turn complex challenges into meaningful digital solutions.
+      </p>
+    </div>
+
+    <!-- 3 Large Distinctive Solution Cards -->
+    <div class="solutions-grid">
+      @for (item of solutions; track item.id; let i = $index) {
+        <article
+          class="solution-card"
+          [class.card-featured]="item.highlighted"
+          appReveal
+          [style.--d]="i"
+          appTilt
+        >
+          <div class="card-top">
+            <span class="card-badge">{{ item.badge }}</span>
+            <span class="card-num">{{ item.number }}</span>
+          </div>
+
+          <h3 class="card-title">{{ item.title }}</h3>
+          <p class="card-sub">{{ item.subtitle }}</p>
+          <p class="card-desc">{{ item.description }}</p>
+
+          <ul class="card-features">
+            @for (feat of item.features; track feat) {
+              <li>
+                <span class="feat-check">&check;</span>
+                <span>{{ feat }}</span>
+              </li>
+            }
+          </ul>
+
+          <!-- Technical Visual Preview -->
+          <div class="card-vis">
+            @if (i === 0) {
+              <div class="vis-neural">
+                <span class="vis-node node-a">LLM Core</span>
+                <span class="vis-line"></span>
+                <span class="vis-node node-b">Neural RAG</span>
+              </div>
+            } @else if (i === 1) {
+              <div class="vis-workflow">
+                <span class="wf-pill">Event Stream</span>
+                <span class="wf-arrow">&rarr;</span>
+                <span class="wf-pill wf-active">Agent Graph</span>
+                <span class="wf-arrow">&rarr;</span>
+                <span class="wf-pill">Execution</span>
+              </div>
+            } @else {
+              <div class="vis-platform">
+                <span class="plat-metric">100 / 100</span>
+                <span class="plat-bar"><i style="width: 100%"></i></span>
+                <span class="plat-tag">Zero Layout Shift &middot; Edge Hydrated</span>
+              </div>
+            }
+          </div>
+
+          <a href="#contact" class="btn card-action" (click)="go($event, 'contact', item.title)">
+            <span>Enquire on Solution</span>
+            <span aria-hidden="true">&nearr;</span>
+          </a>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     02 / SELECTED WORK (Featured Projects)
+     ========================================= -->
+<section id="projects" data-sky class="section bg-white">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow" appReveal>02 / SELECTED WORK</span>
+      <h2 appReveal="60">Ideas become<br /><span class="text-cobalt">real things.</span></h2>
+      <p class="lead" appReveal="120">
+        A curated showcase of architectural concepts, intelligent systems, and engineering benchmarks crafted by Raventiq.
+      </p>
+    </div>
+
+    <div class="projects-stack">
+      @for (project of projects; track project.id; let i = $index) {
+        <article
+          class="project-card"
+          [class.theme-navy]="project.theme === 'navy'"
+          [class.theme-cobalt]="project.theme === 'cobalt'"
+          [class.theme-offwhite]="project.theme === 'offwhite'"
+          appReveal
+        >
+          <div class="project-details">
+            <div class="project-num-tag">
+              <span class="p-num">/{{ project.number }}</span>
+              <span class="p-blueprint">Case Blueprint</span>
+            </div>
+
+            <h3 class="p-title">{{ project.title }}</h3>
+            <p class="p-sub">{{ project.subtitle }}</p>
+            <p class="p-desc">{{ project.description }}</p>
+
+            <div class="p-metrics">
+              @for (m of project.metrics; track m.label) {
+                <div class="m-box">
+                  <span class="m-val">{{ m.value }}</span>
+                  <span class="m-lbl">{{ m.label }}</span>
+                </div>
+              }
+            </div>
+
+            <div class="p-tags">
+              @for (t of project.tags; track t) {
+                <span class="tag-pill">{{ t }}</span>
+              }
+            </div>
+
+            <button type="button" class="btn p-cta" (click)="openProject(project)">
+              <span>Explore Project Specs</span>
+              <span aria-hidden="true">&nearr;</span>
+            </button>
+          </div>
+
+          <!-- Technical Terminal Mockup -->
+          <div class="project-terminal">
+            <div class="term-header">
+              <span class="t-dot dot-r"></span>
+              <span class="t-dot dot-y"></span>
+              <span class="t-dot dot-g"></span>
+              <span class="t-url">raventiq://architecture/{{ project.id }}</span>
+            </div>
+            <div class="term-body">
+              <div class="term-log">
+                <span class="log-ok">&bull; STATUS: OPTIMAL</span>
+                <span class="log-sub">LATENCY BENCHMARK: SUB-100MS</span>
+              </div>
+              <div class="term-code">
+                <code>
+                  const cluster = await Raventiq.init({{ project.id }});<br />
+                  cluster.streamReasoning(&#123; mode: 'deterministic' &#125;);
+                </code>
+              </div>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     03 / OUR CAPABILITIES (Interactive 2-Col)
+     ========================================= -->
+<section id="capabilities" data-sky class="section bg-offwhite">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow" appReveal>03 / OUR CAPABILITIES</span>
+      <h2 appReveal="60">
+        One intelligent<br />
+        idea at a time.<br />
+        <span class="text-cobalt">Endless possibilities.</span>
+      </h2>
+      <p class="lead" appReveal="120">
+        Deep technical expertise paired with product discipline. Select any domain below to inspect architecture specifications.
+      </p>
+    </div>
+
+    <div class="capabilities-layout" appReveal="160">
+      <!-- Left Column: Selectable List -->
+      <div class="cap-selector">
+        @for (cap of capabilities; track cap.id; let i = $index) {
+          <button
+            type="button"
+            class="cap-item"
+            [class.active]="activeCapability() === i"
+            (click)="pickCapability(i)"
+          >
+            <span class="cap-idx">0{{ i + 1 }}</span>
+            <span class="cap-name">{{ cap.title }}</span>
+            <span class="cap-arrow">&rarr;</span>
+          </button>
+        }
+      </div>
+
+      <!-- Right Column: Large Dynamic Panel -->
+      <div class="cap-panel-wrapper">
+        @if (capabilities[activeCapability()]; as cur) {
+          <article class="cap-display-panel" #capPanel>
+            <div class="panel-eyebrow">
+              <span class="pill-badge">Domain Capability</span>
+              <span class="panel-idx">Capability 0{{ activeCapability() + 1 }} / 05</span>
+            </div>
+
+            <h3 class="panel-title">{{ cur.title }}</h3>
+            <p class="panel-sub">{{ cur.subtitle }}</p>
+            <p class="panel-desc">{{ cur.description }}</p>
+
+            <div class="panel-metrics">
+              @for (m of cur.metrics; track m.label) {
+                <div class="pm-box">
+                  <span class="pm-lbl">{{ m.label }}</span>
+                  <span class="pm-val">{{ m.value }}</span>
+                </div>
+              }
+            </div>
+
+            <div class="panel-highlights">
+              <h4>Key Engineering Advantages</h4>
+              <ul>
+                @for (h of cur.highlights; track h) {
+                  <li><span>&check;</span> {{ h }}</li>
+                }
+              </ul>
+            </div>
+
+            <div class="panel-stack">
+              <h4>Technologies &amp; Frameworks</h4>
+              <div class="stack-tags">
+                @for (t of cur.stack; track t) {
+                  <span>{{ t }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="panel-action">
+              <p class="panel-note">{{ cur.architectureNote }}</p>
+              <a href="#contact" class="btn primary" (click)="go($event, 'contact', cur.title)">
+                <span>Consult on {{ cur.title }}</span>
+                <span aria-hidden="true">&nearr;</span>
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     04 / ABOUT RAVENTIQ (Deep Navy Section)
+     ========================================= -->
+<section id="about" data-sky class="section bg-navy">
+  <div class="container about-grid">
+    <div class="about-text">
+      <span class="eyebrow eyebrow-light" appReveal>04 / THE THINKING BEHIND THE BUILDING</span>
+      <h2 class="text-white" appReveal="60">
+        Curiosity drives us.<br />
+        <span class="grad-lime">Intelligence empowers us.</span><br />
+        Possibility inspires us.
+      </h2>
+      <p class="lead lead-light" appReveal="120">
+        At Raventiq, we believe technology should solve meaningful problems, simplify complexity, and open doors to new possibilities. We combine engineering, creativity, and intelligent systems to build for a rapidly evolving world.
+      </p>
+
+      <div class="creed-card" appReveal="180">
+        <span class="creed-label">ENGINEERING CREED</span>
+        <p>
+          &ldquo;We reject unnecessary technical bloat and generic template solutions. We build durable, mathematically sound, highly maintainable systems that scale effortlessly from day one.&rdquo;
+        </p>
+      </div>
+
+      <div class="about-founders" appReveal="240">
+        @for (f of s.founders; track f.name) {
+          <div class="founder-card">
+            <div class="f-avatar">{{ f.initial }}</div>
+            <div>
+              <h4>{{ f.name }}</h4>
+              <span class="f-role">{{ f.role }}</span>
+              <p>{{ f.blurb }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right Side: Rotating Synapse Visual Network -->
+    <div class="about-visual" appReveal="140">
+      <div class="synapse-orb">
+        <div class="ring ring-outer"></div>
+        <div class="ring ring-inner"></div>
+        <div class="orb-core">
+          <span class="core-logo">RAVENTIQ</span>
+          <span class="core-sub">SYNAPSE</span>
+        </div>
+      </div>
+      <div class="synapse-stat">
+        <span class="stat-dot"></span>
+        <span>Network Synchronized &middot; Node 08.4 Global</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     HOW WE WORK (4 Numbered Stages - 3D Coverflow Gallery)
+     ========================================= -->
+<section id="process" data-sky class="section bg-white process-section">
+  <div class="container">
+    <div class="section-head center-t">
+      <span class="eyebrow" appReveal>SYSTEMATIC DELIVERY</span>
+      <h2 appReveal="60">How we turn vision<br /><span class="text-cobalt">into production reality.</span></h2>
+      <p class="lead" appReveal="120">
+        A disciplined, four-stage engineering methodology designed to mitigate architectural risk, ensure rapid iteration, and deliver reliable solutions.
+      </p>
+    </div>
+
+    <!-- 3D Coverflow Gallery Stage (Originkit Style) -->
+    <div
+      class="coverflow-gallery"
+      appReveal="160"
+      tabindex="0"
+      role="region"
+      aria-roledescription="3D Coverflow Carousel"
+      aria-label="Engineering process stages"
+      (keydown)="onProcessKeydown($event)"
+      (mouseenter)="pauseProcess(true)"
+      (mouseleave)="pauseProcess(false)"
+    >
+      <div class="coverflow-stage">
+        <div class="coverflow-track">
+          @for (stage of processStages; track stage.step; let i = $index) {
+            @let rel = getProcessRel(i);
+            @let ax = abs(rel);
+            @let isActive = rel === 0;
+            <article
+              class="coverflow-card theme-{{ stage.accent }}"
+              [class.is-active]="isActive"
+              [style.--rel]="rel"
+              [style.--ax]="ax"
+              [style.z-index]="50 - ax * 10"
+              [style.opacity]="ax <= 2 ? 1 : 0"
+              [style.pointer-events]="ax <= 2 ? 'auto' : 'none'"
+              (click)="handleProcessCardClick(i)"
+              [attr.aria-current]="isActive ? 'true' : null"
+            >
+              <!-- Card Top Header -->
+              <div class="cc-header">
+                <div class="cc-badge">
+                  <span class="badge-dot"></span>
+                  <span>{{ stage.badge }}</span>
+                </div>
+                <div class="cc-step">{{ stage.step }}</div>
+              </div>
+
+              <!-- Card Body -->
+              <div class="cc-body">
+                <h3 class="cc-title">{{ stage.title }}</h3>
+                <h4 class="cc-subtitle">{{ stage.subtitle }}</h4>
+                <p class="cc-desc">{{ stage.description }}</p>
+
+                <!-- Technical Deliverables Tags -->
+                <div class="cc-tags">
+                  @for (t of stage.tags; track t) {
+                    <span class="cc-tag">{{ t }}</span>
+                  }
+                </div>
+
+                <!-- Metric / SLA Box -->
+                <div class="cc-stat">
+                  <span class="stat-val">{{ stage.stat.value }}</span>
+                  <span class="stat-lbl">{{ stage.stat.label }}</span>
+                </div>
+              </div>
+
+              <!-- Card Footer -->
+              <div class="cc-footer">
+                <span class="cc-phase">Stage 0{{ i + 1 }} / 04</span>
+                <span class="cc-cta">
+                  <span>{{ isActive ? 'Active Phase' : 'Inspect Phase' }}</span>
+                  <span class="cc-arrow">&nearr;</span>
+                </span>
+              </div>
+
+              <!-- Coverflow Dimming Overlay (as in Originkit code) -->
+              <div class="card-dim" [style.opacity]="isActive ? 0 : 0.48"></div>
+            </article>
+          }
+        </div>
+      </div>
+
+      <!-- Coverflow Navigation Controls -->
+      <div class="coverflow-controls">
+        <button
+          type="button"
+          class="cf-nav-btn prev-btn"
+          (click)="prevProcessSlide()"
+          aria-label="Previous process stage"
+        >
+          &larr;
+        </button>
+
+        <div class="cf-indicators" role="tablist">
+          @for (stage of processStages; track stage.step; let i = $index) {
+            <button
+              type="button"
+              class="cf-pill"
+              [class.active]="activeProcessIndex() === i"
+              (click)="setProcessSlide(i)"
+              [attr.aria-label]="'Go to ' + stage.title"
+            >
+              <span class="pill-num">{{ stage.step }}</span>
+              <span class="pill-name">{{ stage.title }}</span>
+            </button>
+          }
+        </div>
+
+        <button
+          type="button"
+          class="cf-nav-btn next-btn"
+          (click)="nextProcessSlide()"
+          aria-label="Next process stage"
+        >
+          &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     UPDATES / POSTERS (Admin Published Events)
+     ========================================= -->
+@if (posters().length > 0) {
+  <section id="updates" data-sky class="section bg-offwhite">
+    <div class="container">
+      <div class="section-head center-t">
+        <span class="eyebrow" appReveal>UPDATES &middot; FRESH ANNOUNCEMENTS</span>
+        <h2 appReveal="60">What's <span class="text-cobalt">coming up.</span></h2>
+      </div>
+
+      <div class="posters-grid">
+        @for (p of posters(); track p.id; let i = $index) {
+          <article class="glass poster-card" appTilt appReveal [style.--d]="i">
+            <a [href]="p.link_url || null" [attr.target]="p.link_url ? '_blank' : null" rel="noopener" [class.no-link]="!p.link_url">
+              <img [src]="p.image_url" [alt]="p.title" loading="lazy" />
+            </a>
+            <div class="pbody">
+              <h3>{{ p.title }}</h3>
+              @if (p.description) { <p>{{ p.description }}</p> }
+              @if (p.link_url) { <a [href]="p.link_url" target="_blank" rel="noopener" class="more">Learn more &rarr;</a> }
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+}
+
+<!-- =========================================
+     05 / INSIGHTS (Editorial Article Cards)
+     ========================================= -->
+<section id="insights" data-sky class="section bg-offwhite">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow" appReveal>05 / IDEAS IN MOTION</span>
+      <h2 appReveal="60">Thinking about<br /><span class="text-cobalt">what comes next.</span></h2>
+      <p class="lead" appReveal="120">
+        Engineering essays, architectural post-mortems, and perspective on the future of autonomous software.
+      </p>
+    </div>
+
+    <div class="insights-grid">
+      @for (art of insights; track art.id; let i = $index) {
+        <article class="insight-card" appReveal [style.--d]="i" (click)="openArticle(art)">
+          <div class="insight-meta">
+            <span class="cat-pill">{{ art.category }}</span>
+            <span class="read-time">{{ art.readTime }}</span>
+          </div>
+
+          <h3 class="insight-title">{{ art.title }}</h3>
+          <p class="insight-excerpt">{{ art.excerpt }}</p>
+
+          <div class="insight-foot">
+            <span class="author-name">{{ art.author }}</span>
+            <span class="read-link">Read Essay &nearr;</span>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     FINAL CTA (High-Impact Cobalt & Lime)
+     ========================================= -->
+<section class="section-cta">
+  <div class="container cta-in">
+    <div class="eyebrow eyebrow-light" appReveal>START SOMETHING EXTRAORDINARY</div>
+    <h2 class="cta-title" appReveal="60">
+      Have an idea?<br />
+      Let's make it<br />
+      <span class="grad-lime">intelligent.</span>
+    </h2>
+    <p class="lead lead-light" appReveal="120">
+      Tell us what you're imagining. Let's explore how technology can bring it to life.
+    </p>
+
+    <div class="actions" appReveal="180">
+      <a href="#contact" class="btn primary" appMagnetic (click)="go($event, 'contact')">
+        <span>Start a Conversation</span>
+        <span aria-hidden="true">&nearr;</span>
+      </a>
+      <a href="#projects" class="btn ghost-white" appMagnetic="0.25" (click)="go($event, 'projects')">
+        <span>Explore Our Work</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     CONTACT FORM SECTION
+     ========================================= -->
+<section id="contact" data-sky class="section bg-offwhite">
+  <div class="container contact-wrapper">
+    <div class="contact-info">
+      <span class="eyebrow" appReveal>START THE CONVERSATION</span>
+      <h2 appReveal="60">
+        Let’s build<br />
+        something that<br />
+        <span class="text-cobalt">moves forward.</span>
+      </h2>
+      <p class="lead" appReveal="120">
+        Whether you need to architect an autonomous agent swarm, engineer a flagship web platform, or integrate enterprise AI models, we are ready to collaborate.
+      </p>
+
+      <div class="reach-cards" appReveal="180">
+        <a class="reach-item" [href]="'mailto:' + s.email">
+          <span class="reach-lbl">Direct Inquiries</span>
+          <span class="reach-val">{{ s.email }}</span>
+        </a>
+        <div class="reach-item">
+          <span class="reach-lbl">Engineering Hub</span>
+          <span class="reach-val">{{ s.location }} &middot; Global Remote</span>
+        </div>
+        <div class="reach-item">
+          <span class="reach-lbl">Response Commitment</span>
+          <span class="reach-val">Guaranteed reply within 24 business hours</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Working Contact Form Component -->
+    <div class="contact-box" appReveal="120">
+      <app-contact-form />
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     INTERACTIVE PROJECT SPECS MODAL
+     ========================================= -->
+@if (selectedProject(); as p) {
+  <div class="modal-backdrop" (click)="closeProject()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <button class="btn-close" type="button" (click)="closeProject()" aria-label="Close dialog">&times;</button>
+      <div class="modal-top">
+        <span class="modal-num">/{{ p.number }}</span>
+        <span class="modal-badge">ARCHITECTURAL BLUEPRINT</span>
+      </div>
+      <h2>{{ p.title }}</h2>
+      <p class="modal-sub">{{ p.subtitle }}</p>
+      <p class="modal-desc">{{ p.description }}</p>
+
+      <div class="modal-metrics">
+        @for (m of p.metrics; track m.label) {
+          <div>
+            <span class="mm-val">{{ m.value }}</span>
+            <span class="mm-lbl">{{ m.label }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="modal-tags">
+        @for (t of p.tags; track t) {
+          <span>{{ t }}</span>
+        }
+      </div>
+
+      <div class="modal-action">
+        <a href="#contact" class="btn primary" (click)="closeProject(); go($event, 'contact', p.title)">
+          <span>Commission Similar Project</span>
+          <span aria-hidden="true">&nearr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- =========================================
+     INTERACTIVE ARTICLE ESSAY MODAL
+     ========================================= -->
+@if (selectedArticle(); as art) {
+  <div class="modal-backdrop" (click)="closeArticle()">
+    <div class="modal-card article-modal" (click)="$event.stopPropagation()">
+      <button class="btn-close" type="button" (click)="closeArticle()" aria-label="Close dialog">&times;</button>
+      <div class="art-meta">
+        <span class="cat-pill">{{ art.category }}</span>
+        <span class="read-time">{{ art.readTime }} &middot; {{ art.date }}</span>
+      </div>
+      <h2>{{ art.title }}</h2>
+      <p class="art-author">Written by {{ art.author }}</p>
+      <div class="art-content">
+        <p>{{ art.excerpt }}</p>
+        <p>Autonomous systems demand deterministic state management and rigorous checkpointing to operate reliably under mission-critical enterprise workloads.</p>
+        <p>By pairing self-reflective validation nodes with structured API contracts, systems achieve 99.8% transactional accuracy while remaining transparent and debuggable.</p>
+      </div>
+      <div class="modal-action">
+        <button class="btn soft" type="button" (click)="closeArticle()">Close Essay</button>
+      </div>
+    </div>
+  </div>
+}

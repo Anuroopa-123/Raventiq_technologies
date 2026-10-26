@@ -1,0 +1,23 @@
+:host { display: block; }
+.auth-wrap { min-height: 100svh; display: flex; align-items: center; justify-content: center; padding: 140px 20px 60px; }
+.card { width: min(480px, 100%); padding: clamp(26px, 5vw, 44px); }
+.eyebrow { margin-bottom: 14px; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.2rem); margin-bottom: 8px; }
+.lead { font-size: 1rem; margin-bottom: 26px; }
+
+.or { display: flex; align-items: center; gap: 12px; margin: 22px 0; color: var(--muted); font-size: .85rem;
+  &::before, &::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.12); } }
+
+form { display: grid; gap: 16px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+label { display: grid; gap: 6px; font-weight: 600; font-size: .9rem; color: var(--plum); }
+input { font: inherit; font-weight: 400; color: #0e1420; width: 100%; padding: 13px 15px; border: 1.5px solid rgba(91, 47, 214, .18); border-radius: 14px; background: rgba(255, 255, 255, .92);
+  &::placeholder { color: #6b7284; }
+  &:focus { outline: none; border-color: var(--lav); box-shadow: 0 0 0 4px rgba(122, 77, 255, .22); background: #fff; }
+  &.ng-invalid.ng-touched { border-color: var(--err); } }
+.err { color: #ff8a9e; font-weight: 500; font-size: .84rem; }
+.box { background: rgba(255, 84, 112, .12); border: 1px solid rgba(255, 84, 112, .3); border-radius: 10px; padding: 12px 14px; margin: 0; }
+form .btn { margin-top: 4px; width: 100%; }
+.switch { text-align: center; margin: 22px 0 0; font-size: .92rem; color: var(--muted);
+  a { color: var(--coral); font-weight: 700; text-decoration: none; &:hover { text-decoration: underline; } } }
+@media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
