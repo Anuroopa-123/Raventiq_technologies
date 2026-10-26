@@ -14,10 +14,10 @@ export const SITE = {
   twitter: 'https://x.com/',
   location: 'Tamil Nadu, India',
   description: 'Raventiq.tech is an advanced technology engineering studio specializing in cognitive AI, multi-agent autonomous workflows, and modern high-performance digital platforms.',
-  founders: [
-    { name: 'Anuroopa', role: 'Co-Founder & AI Systems Lead', initial: 'A', blurb: 'Leads cognitive architecture, model evaluations, and multimodal engineering delivery.' },
-    { name: 'Dinesh', role: 'Co-Founder & Systems Architect', initial: 'D', blurb: 'Leads full-stack platform engineering, event-driven infrastructure, and autonomous agent orchestration.' },
-  ],
+  // founders: [
+  //   { name: 'Anuroopa', role: 'Co-Founder & AI Systems Lead', initial: 'A', blurb: 'Leads cognitive architecture, model evaluations, and multimodal engineering delivery.' },
+  //   { name: 'Dinesh', role: 'Co-Founder & Systems Architect', initial: 'D', blurb: 'Leads full-stack platform engineering, event-driven infrastructure, and autonomous agent orchestration.' },
+  // ],
 };
 
 export const SECTIONS = [

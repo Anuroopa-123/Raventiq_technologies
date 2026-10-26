@@ -43,10 +43,12 @@ export interface HeroPanel {
   color: 'lime' | 'cobalt' | 'navy';
 }
 
+import { GalleryTunnelComponent } from '../components/gallery-tunnel';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RevealDirective, TiltDirective, MagneticDirective, ContactFormComponent],
+  imports: [RevealDirective, TiltDirective, MagneticDirective, ContactFormComponent, GalleryTunnelComponent],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

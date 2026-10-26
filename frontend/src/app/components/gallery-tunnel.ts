@@ -10,12 +10,24 @@ import {
 } from '@angular/core';
 import * as THREE from 'three';
 
-const DEFAULT_IMAGES = [
-  'https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/f8b3688c-11d0-425c-0b6f-66f133322c00/w=800',
-  'https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/c083d83a-f5a4-4434-989f-4eaa9bbe7500/w=800',
-  'https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/12e8b0be-f114-4134-1ab7-53116bfc2800/w=800',
-  'https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/b14ae2a2-1116-4a7f-0a18-1d74c4a46f00/w=800',
-  'https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/babdb603-8b5b-4520-58d6-240a34463c00/w=800',
+// Curated high-resolution tech-focused imagery
+const TECH_IMAGES = [
+  // 01: AI Neural Network & Brain Synapses
+  'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop',
+  // 02: High-Density Cloud Infrastructure & Server Racks
+  'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop',
+  // 03: Silicon Microprocessor & Quantum Circuitry
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop',
+  // 04: Futuristic Holographic Data Analytics Interface
+  'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
+  // 05: Cyber Security Code Stream & Encryption Matrix
+  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop',
+  // 06: Glowing Neon Tech Waves & Optical Geometry
+  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop',
+  // 07: Quantum Particle Mesh & Multi-agent Simulation
+  'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=800&auto=format&fit=crop',
+  // 08: Robotics & Autonomous Cognitive Perception
+  'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800&auto=format&fit=crop',
 ];
 
 const TUNNEL_WIDTH = 2;
@@ -38,21 +50,17 @@ const FOG_FAR = NUM_SEGMENTS * SEGMENT_DEPTH * 0.95;
       [class.fullscreen]="isFullscreen()"
       tabindex="0"
       role="region"
-      aria-label="3D Gallery Tunnel"
+      aria-label="3D Tech Tunnel Viewport"
     >
       <!-- Canvas Render Target -->
       <canvas #canvasRef class="tunnel-canvas"></canvas>
 
-      <!-- Top HUD Header -->
+      <!-- Minimalist Clean Controls (No text banners or distracting HUD) -->
       <div class="tunnel-header">
         <div class="th-dots">
           <span class="dot dot-r"></span>
           <span class="dot dot-y"></span>
           <span class="dot dot-g"></span>
-        </div>
-        <div class="th-badge">
-          <span class="th-pulse"></span>
-          <span>GALLERY TUNNEL &middot; 3D WARP</span>
         </div>
         <div class="th-actions">
           <button
@@ -67,21 +75,7 @@ const FOG_FAR = NUM_SEGMENTS * SEGMENT_DEPTH * 0.95;
         </div>
       </div>
 
-      <!-- Live Telemetry HUD Bar (Bottom Left) -->
-      <div class="tunnel-hud">
-        <div class="hud-item">
-          <span class="hud-lbl">DRIVE SPEED</span>
-          <span class="hud-val" [class.boosted]="isWarping()">
-            {{ isWarping() ? '10.0x WARP' : '1.0x CRUISE' }}
-          </span>
-        </div>
-        <div class="hud-item">
-          <span class="hud-lbl">HORIZON</span>
-          <span class="hud-val">15 SEGMENTS</span>
-        </div>
-      </div>
-
-      <!-- Floating Interactive Cursor Pill (Originkit feature) -->
+      <!-- Floating Interactive Cursor Pill (Originkit Specs) -->
       <div #cursorRef class="tunnel-cursor-pill">
         <span>{{ isWarping() ? 'Accelerating...' : 'Hold to Warp' }}</span>
       </div>
@@ -137,12 +131,12 @@ const FOG_FAR = NUM_SEGMENTS * SEGMENT_DEPTH * 0.95;
         height: 100%;
       }
 
-      /* Top HUD Header */
+      /* Clean Top Control Bar */
       .tunnel-header {
         position: absolute;
-        top: 14px;
-        left: 18px;
-        right: 18px;
+        top: 16px;
+        left: 20px;
+        right: 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -169,54 +163,19 @@ const FOG_FAR = NUM_SEGMENTS * SEGMENT_DEPTH * 0.95;
         }
       }
 
-      .th-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 5px 12px;
-        border-radius: 999px;
-        background: rgba(16, 25, 71, 0.75);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        font: 700 0.68rem var(--font-head, sans-serif);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: #ffffff;
-      }
-
-      .th-pulse {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #c5ff3d;
-        box-shadow: 0 0 8px #c5ff3d;
-        animation: pulseDot 1.4s infinite ease-in-out alternate;
-      }
-
-      @keyframes pulseDot {
-        0% {
-          transform: scale(0.8);
-          opacity: 0.5;
-        }
-        100% {
-          transform: scale(1.3);
-          opacity: 1;
-        }
-      }
-
       .th-actions {
         pointer-events: auto;
       }
 
       .th-fs-btn {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.18);
         background: rgba(16, 25, 71, 0.75);
         backdrop-filter: blur(8px);
         color: #ffffff;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         display: grid;
         place-items: center;
         cursor: pointer;
@@ -226,47 +185,7 @@ const FOG_FAR = NUM_SEGMENTS * SEGMENT_DEPTH * 0.95;
           background: #c5ff3d;
           color: #101947;
           border-color: #c5ff3d;
-        }
-      }
-
-      /* Live Telemetry HUD Bar */
-      .tunnel-hud {
-        position: absolute;
-        bottom: 14px;
-        left: 18px;
-        display: flex;
-        gap: 16px;
-        pointer-events: none;
-        z-index: 10;
-      }
-
-      .hud-item {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        background: rgba(16, 25, 71, 0.75);
-        backdrop-filter: blur(8px);
-        padding: 6px 12px;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-      }
-
-      .hud-lbl {
-        font: 600 0.62rem var(--font-head, sans-serif);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.6);
-      }
-
-      .hud-val {
-        font: 800 0.78rem monospace;
-        color: #ffffff;
-        letter-spacing: 0.04em;
-        transition: color 0.2s ease;
-
-        &.boosted {
-          color: #c5ff3d;
-          text-shadow: 0 0 10px rgba(197, 255, 61, 0.6);
+          transform: scale(1.05);
         }
       }
 
@@ -280,11 +199,11 @@ const FOG_FAR = NUM_SEGMENTS * SEGMENT_DEPTH * 0.95;
         opacity: 0;
         background: #c5ff3d;
         color: #101947;
-        font: 700 0.8rem var(--font-head, sans-serif);
+        font: 700 0.82rem var(--font-head, sans-serif);
         letter-spacing: 0.02em;
         border-radius: 9999px;
-        padding: 8px 16px;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+        padding: 8px 18px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
         transition:
           transform 0.1s ease,
           opacity 0.2s ease;
@@ -424,57 +343,150 @@ export class GalleryTunnelComponent implements AfterViewInit, OnDestroy {
         })
     );
 
-    // Procedural fallback canvas texture generator for instant crisp visuals
-    const createProceduralTexture = (title: string, colorHex: string) => {
+    // High-tech procedural canvas textures (circuits, neural graphs, waveforms, radar)
+    const createProceduralTechTexture = (title: string, colorHex: string, type: number) => {
       const c = document.createElement('canvas');
       c.width = 512;
       c.height = 512;
       const ctx = c.getContext('2d');
       if (ctx) {
-        ctx.fillStyle = '#0a0f2e';
+        // Deep cyber backdrop
+        ctx.fillStyle = '#060a1e';
         ctx.fillRect(0, 0, 512, 512);
 
-        // Grid lines
+        // Tech grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x <= 512; x += 32) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, 512);
+          ctx.stroke();
+        }
+        for (let y = 0; y <= 512; y += 32) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(512, y);
+          ctx.stroke();
+        }
+
+        // Glowing cyber border
         ctx.strokeStyle = colorHex;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 3;
         ctx.strokeRect(16, 16, 480, 480);
 
-        // Circular glow
-        const grad = ctx.createRadialGradient(256, 256, 20, 256, 256, 220);
-        grad.addColorStop(0, colorHex);
-        grad.addColorStop(1, 'rgba(10, 15, 46, 0)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(20, 20, 472, 472);
+        // Corner accents
+        ctx.fillStyle = colorHex;
+        ctx.fillRect(12, 12, 24, 6);
+        ctx.fillRect(12, 12, 6, 24);
+        ctx.fillRect(476, 12, 24, 6);
+        ctx.fillRect(494, 12, 6, 24);
+        ctx.fillRect(12, 494, 24, 6);
+        ctx.fillRect(12, 476, 6, 24);
+        ctx.fillRect(476, 494, 24, 6);
+        ctx.fillRect(494, 476, 6, 24);
+
+        if (type === 0) {
+          // Neural graph nodes
+          const nodes = [
+            [120, 180], [256, 120], [392, 180],
+            [160, 300], [352, 300], [256, 360]
+          ];
+          ctx.strokeStyle = 'rgba(197, 255, 61, 0.4)';
+          ctx.lineWidth = 2;
+          nodes.forEach((n1, i) => {
+            nodes.slice(i + 1).forEach((n2) => {
+              ctx.beginPath();
+              ctx.moveTo(n1[0], n1[1]);
+              ctx.lineTo(n2[0], n2[1]);
+              ctx.stroke();
+            });
+          });
+          nodes.forEach((n) => {
+            ctx.fillStyle = colorHex;
+            ctx.beginPath();
+            ctx.arc(n[0], n[1], 8, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        } else if (type === 1) {
+          // Digital Waveform
+          ctx.strokeStyle = colorHex;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          for (let x = 32; x < 480; x += 10) {
+            const y = 256 + Math.sin(x * 0.05) * 60 + Math.cos(x * 0.1) * 30;
+            if (x === 32) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        } else if (type === 2) {
+          // Concentric radar circles
+          ctx.strokeStyle = colorHex;
+          ctx.lineWidth = 2;
+          [50, 100, 150].forEach((r) => {
+            ctx.beginPath();
+            ctx.arc(256, 256, r, 0, Math.PI * 2);
+            ctx.stroke();
+          });
+          ctx.beginPath();
+          ctx.moveTo(256, 100);
+          ctx.lineTo(256, 412);
+          ctx.moveTo(100, 256);
+          ctx.lineTo(412, 256);
+          ctx.stroke();
+        } else {
+          // Microchip circuit trace
+          ctx.strokeStyle = colorHex;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(180, 180, 152, 152);
+          for (let i = 0; i < 4; i++) {
+            ctx.beginPath();
+            ctx.moveTo(200 + i * 36, 180);
+            ctx.lineTo(200 + i * 36, 80);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(200 + i * 36, 332);
+            ctx.lineTo(200 + i * 36, 432);
+            ctx.stroke();
+          }
+        }
 
         // Title text
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 36px monospace';
+        ctx.font = 'bold 30px monospace';
         ctx.textAlign = 'center';
-        ctx.fillText(title, 256, 260);
+        ctx.fillText(title, 256, 440);
 
         ctx.fillStyle = colorHex;
-        ctx.font = '600 20px monospace';
-        ctx.fillText('RAVENTIQ CORE', 256, 300);
+        ctx.font = '700 16px monospace';
+        ctx.fillText('RAVENTIQ TECH CLUSTER', 256, 468);
       }
       const tex = new THREE.CanvasTexture(c);
       tex.colorSpace = THREE.SRGBColorSpace;
       return tex;
     };
 
-    const fallbackTitles = [
-      'NEURAL MESH',
+    const techTitles = [
+      'NEURAL GRAPH',
       'AGENT SWARM',
-      'EDGE TTFB',
-      'SENSORY GRAPH',
+      'QUANTUM CORE',
+      'EDGE WORKER',
       'VECTOR DB',
+      'POLYPHONIC AUDIO',
+      'KAFKA EVENT MESH',
+      'AI INFERENCE',
     ];
 
-    const imageMats = DEFAULT_IMAGES.map((url, idx) => {
-      const fallbackTex = createProceduralTexture(fallbackTitles[idx % fallbackTitles.length], colors[idx % colors.length]);
+    const imageMats = TECH_IMAGES.map((url, idx) => {
+      const proceduralTex = createProceduralTechTexture(
+        techTitles[idx % techTitles.length],
+        colors[idx % colors.length],
+        idx % 4
+      );
       const mat = new THREE.MeshBasicMaterial({
-        map: fallbackTex,
+        map: proceduralTex,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.92,
         side: THREE.DoubleSide,
       });
 
@@ -494,7 +506,7 @@ export class GalleryTunnelComponent implements AfterViewInit, OnDestroy {
         },
         undefined,
         () => {
-          // Fallback texture remains active if network is slow/offline
+          // Fallback procedural tech texture stays active
         }
       );
       return mat;
