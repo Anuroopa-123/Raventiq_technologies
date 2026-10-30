@@ -29,6 +29,10 @@ import {
   INSIGHTS,
   SITE,
   WORDS,
+  INTERNSHIP_TRACKS,
+  FAQS,
+  InternshipTrack,
+  FaqItem,
 } from '../site.config';
 
 export interface HeroPanel {
@@ -44,11 +48,19 @@ export interface HeroPanel {
 }
 
 import { GalleryTunnelComponent } from '../components/gallery-tunnel';
+import { ScrollMorphHeroComponent } from '../components/scroll-morph-hero';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RevealDirective, TiltDirective, MagneticDirective, ContactFormComponent, GalleryTunnelComponent],
+  imports: [
+    RevealDirective,
+    TiltDirective,
+    MagneticDirective,
+    ContactFormComponent,
+    GalleryTunnelComponent,
+    ScrollMorphHeroComponent,
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -113,7 +125,15 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
     },
   ];
 
-  // Active capability index in the interactive 2-column switcher
+  // Horizontal Carousel for "02 / CORE TECH STACK"
+  @ViewChild('capCarouselTrack') capCarouselTrack?: ElementRef<HTMLElement>;
+  canScrollCapLeft = signal(false);
+  canScrollCapRight = signal(true);
+  activeCapCardIndex = signal(0);
+  isCapHovered = signal(false);
+  private capAutoScrollTimer: any = null;
+
+  // Active capability index for detail view or modal
   activeCapability = signal(0);
   @ViewChild('capPanel') capPanel?: ElementRef<HTMLElement>;
 
@@ -125,6 +145,35 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   // Interactive modals
   selectedProject = signal<any | null>(null);
   selectedArticle = signal<any | null>(null);
+
+  // College Student Internship Program
+  internshipTracks = INTERNSHIP_TRACKS;
+  selectedTrack = signal<InternshipTrack | null>(null);
+
+  // Interactive FAQ Accordion
+  faqs = FAQS;
+  openFaqId = signal<string | null>('faq-1');
+
+  toggleFaq(id: string) {
+    this.openFaqId.update((curr) => (curr === id ? null : id));
+  }
+
+  isFaqOpen(id: string): boolean {
+    return this.openFaqId() === id;
+  }
+
+  openTrack(t: InternshipTrack) {
+    this.selectedTrack.set(t);
+  }
+
+  closeTrack() {
+    this.selectedTrack.set(null);
+  }
+
+  applyForTrack(t: InternshipTrack, ev: Event) {
+    this.closeTrack();
+    this.go(ev, 'contact', `College Internship - ${t.title}`);
+  }
 
   ngOnInit() {
     this.posterApi.list().subscribe({
@@ -143,11 +192,13 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
     }, 120);
     this.startHeroCarousel();
     this.startProcessAutoplay();
+    this.startCapAutoplay();
   }
 
   ngOnDestroy() {
     this.stopHeroCarousel();
     this.stopProcessAutoplay();
+    this.stopCapAutoplay();
   }
 
   startHeroCarousel() {
@@ -344,6 +395,70 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
 
   pad(n: number): string {
     return String(n).padStart(2, '0');
+  }
+
+  // Horizontal Carousel controls for Core Tech Stack (02 / CORE TECH STACK)
+  scrollCapCarousel(dir: 'left' | 'right') {
+    const el = this.capCarouselTrack?.nativeElement;
+    if (!el) return;
+    const cardWidth = 360; // Card width + gap
+    const scrollAmount = dir === 'left' ? -cardWidth : cardWidth;
+    el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    setTimeout(() => this.updateCapScrollState(), 320);
+  }
+
+  scrollToCapCard(index: number) {
+    const el = this.capCarouselTrack?.nativeElement;
+    if (!el) return;
+    const cards = el.querySelectorAll('.cap-slide-card');
+    if (cards[index]) {
+      (cards[index] as HTMLElement).scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      });
+      this.activeCapCardIndex.set(index);
+    }
+  }
+
+  onCapScroll() {
+    this.updateCapScrollState();
+  }
+
+  updateCapScrollState() {
+    const el = this.capCarouselTrack?.nativeElement;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    this.canScrollCapLeft.set(el.scrollLeft > 10);
+    this.canScrollCapRight.set(el.scrollLeft < maxScroll - 10);
+
+    // Estimate active card based on scroll position
+    const cardWidth = 360;
+    const currentIdx = Math.round(el.scrollLeft / cardWidth);
+    this.activeCapCardIndex.set(Math.min(Math.max(currentIdx, 0), this.capabilities.length - 1));
+  }
+
+  startCapAutoplay() {
+    this.stopCapAutoplay();
+    this.capAutoScrollTimer = setInterval(() => {
+      if (!this.isCapHovered()) {
+        const el = this.capCarouselTrack?.nativeElement;
+        if (!el) return;
+        const maxScroll = el.scrollWidth - el.clientWidth;
+        if (el.scrollLeft >= maxScroll - 20) {
+          el.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          this.scrollCapCarousel('right');
+        }
+      }
+    }, 4500);
+  }
+
+  stopCapAutoplay() {
+    if (this.capAutoScrollTimer) {
+      clearInterval(this.capAutoScrollTimer);
+      this.capAutoScrollTimer = null;
+    }
   }
 
   pickCapability(i: number) {
