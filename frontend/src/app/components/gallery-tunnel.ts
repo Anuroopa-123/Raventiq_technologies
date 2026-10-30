@@ -75,7 +75,7 @@ const FOG_FAR = NUM_SEGMENTS * SEGMENT_DEPTH * 0.95;
         </div>
       </div>
 
-      <!-- Floating Interactive Cursor Pill (Originkit Specs) -->
+      <!-- Floating Interactive Cursor Pill -->
       <div #cursorRef class="tunnel-cursor-pill">
         <span>{{ isWarping() ? 'Accelerating...' : 'Hold to Warp' }}</span>
       </div>
