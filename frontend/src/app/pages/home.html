@@ -454,62 +454,103 @@
       </div>
     </div>
 
-    <!-- 3 Tracks Grid -->
+    <!-- 3 Tracks Grid with Flip Cards -->
     <div class="intern-tracks-grid" appReveal="180">
       @for (track of internshipTracks; track track.id) {
-        <article class="track-card" appTilt>
-          <div class="track-header">
-            <span class="track-badge">{{ track.badge }}</span>
-            <div class="track-meta">
-              <span class="meta-item">⏱ {{ track.duration }}</span>
-              <span class="meta-item">🌐 {{ track.mode }}</span>
-            </div>
-          </div>
+        <div class="flip-card-container">
+          <div class="flip-card-inner" [class.is-flipped]="flippedTracks()[track.id]">
+            
+            <!-- FRONT FACE: Compact Overview & Quick Details -->
+            <article class="flip-card-face flip-card-front">
+              <div class="track-header">
+                <span class="track-badge">{{ track.badge }}</span>
+                <div class="track-meta">
+                  <span class="meta-item">⏱ {{ track.duration }}</span>
+                  <span class="meta-item">🌐 {{ track.mode }}</span>
+                </div>
+              </div>
 
-          <h3 class="track-title">{{ track.title }}</h3>
-          <p class="track-desc">{{ track.description }}</p>
+              <h3 class="track-title">{{ track.title }}</h3>
+              <p class="track-desc">{{ track.description }}</p>
 
-          <div class="track-skills">
-            <span class="skills-label">Core Tech Stack:</span>
-            <div class="skills-wrap">
-              @for (sk of track.skills; track sk) {
-                <span class="skill-tag">{{ sk }}</span>
-              }
-            </div>
-          </div>
+              <div class="track-skills">
+                <span class="skills-label">Core Tech Stack:</span>
+                <div class="skills-wrap">
+                  @for (sk of track.skills; track sk) {
+                    <span class="skill-tag">{{ sk }}</span>
+                  }
+                </div>
+              </div>
 
-          <div class="track-curriculum-preview">
-            <span class="curr-label">Curriculum Highlights:</span>
-            <ul>
-              @for (c of track.curriculum; track c) {
-                <li>
-                  <span class="curr-check">&check;</span>
-                  <span>{{ c }}</span>
-                </li>
-              }
-            </ul>
-          </div>
+              <div class="card-flip-prompt" (click)="toggleFlipTrack(track.id, $event)">
+                <span class="flip-hint-icon">↻</span>
+                <span class="flip-hint-text">Flip to view curriculum &amp; apply</span>
+              </div>
 
-          <div class="track-perks">
-            <span class="curr-label">Program Perks:</span>
-            <div class="perks-pills">
-              @for (p of track.perks; track p) {
-                <span class="perk-pill">★ {{ p }}</span>
-              }
-            </div>
-          </div>
+              <div class="track-actions-front">
+                <button
+                  type="button"
+                  class="btn-flip-trigger"
+                  (click)="toggleFlipTrack(track.id, $event)"
+                >
+                  <span>Curriculum &amp; Apply</span>
+                  <span class="flip-arrow">&rarr;</span>
+                </button>
+              </div>
+            </article>
 
-          <div class="track-actions">
-            <a
-              href="#contact"
-              class="btn primary btn-apply"
-              (click)="go($event, 'contact', 'College Internship: ' + track.title)"
-            >
-              <span>Apply for this Track</span>
-              <span aria-hidden="true">&nearr;</span>
-            </a>
+            <!-- BACK FACE: Curriculum, Perks & Apply Button -->
+            <article class="flip-card-face flip-card-back">
+              <div class="back-card-top">
+                <div class="back-badge-row">
+                  <span class="back-badge">CURRICULUM &amp; PERKS</span>
+                  <button
+                    type="button"
+                    class="btn-flip-back"
+                    (click)="toggleFlipTrack(track.id, $event)"
+                    title="Flip back"
+                  >
+                    ↺ Front
+                  </button>
+                </div>
+                <h4 class="back-title">{{ track.title }}</h4>
+              </div>
+
+              <div class="track-curriculum-preview">
+                <span class="curr-label">Curriculum Highlights:</span>
+                <ul>
+                  @for (c of track.curriculum; track c) {
+                    <li>
+                      <span class="curr-check">&check;</span>
+                      <span>{{ c }}</span>
+                    </li>
+                  }
+                </ul>
+              </div>
+
+              <div class="track-perks">
+                <span class="curr-label">Track Perks:</span>
+                <div class="perks-pills">
+                  @for (p of track.perks; track p) {
+                    <span class="perk-pill">★ {{ p }}</span>
+                  }
+                </div>
+              </div>
+
+              <div class="track-actions-back">
+                <a
+                  href="#contact"
+                  class="btn primary btn-apply"
+                  (click)="go($event, 'contact', 'College Internship: ' + track.title)"
+                >
+                  <span>Apply for this Track</span>
+                  <span aria-hidden="true">&nearr;</span>
+                </a>
+              </div>
+            </article>
+
           </div>
-        </article>
+        </div>
       }
     </div>
 
@@ -554,13 +595,13 @@
       </div>
 
       <div class="about-founders" appReveal="240">
-        @for (f of s.founders; track f.name) {
-          <div class="founder-card">
-            <div class="f-avatar">{{ f.initial }}</div>
+        @for (item of s.principles; track item.title) {
+          <div class="founder-card principle-card">
+            <div class="f-avatar">✦</div>
             <div>
-              <h4>{{ f.name }}</h4>
-              <span class="f-role">{{ f.role }}</span>
-              <p>{{ f.blurb }}</p>
+              <h4>{{ item.title }}</h4>
+              <span class="f-role">{{ item.tag }}</span>
+              <p>{{ item.desc }}</p>
             </div>
           </div>
         }
