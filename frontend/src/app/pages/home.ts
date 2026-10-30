@@ -149,6 +149,17 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   // College Student Internship Program
   internshipTracks = INTERNSHIP_TRACKS;
   selectedTrack = signal<InternshipTrack | null>(null);
+  flippedTracks = signal<Record<string, boolean>>({});
+
+  toggleFlipTrack(id: string, ev?: Event) {
+    if (ev) {
+      ev.stopPropagation();
+    }
+    this.flippedTracks.update((state) => ({
+      ...state,
+      [id]: !state[id],
+    }));
+  }
 
   // Interactive FAQ Accordion
   faqs = FAQS;

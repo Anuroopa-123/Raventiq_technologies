@@ -14,9 +14,9 @@ export const SITE = {
   twitter: 'https://x.com/',
   location: 'Tamil Nadu, India',
   description: 'Raventiq.tech is an advanced engineering studio specializing in high-performance Full-Stack platforms (React, Angular, Node.js, Python, FastAPI, PostgreSQL, MySQL), practical AI integration, and production-grade internships for college students.',
-  founders: [
-    { name: 'Anuroopa', role: 'Co-Founder & Full-Stack / AI Lead', initial: 'A', blurb: 'Leads modern frontend architectures (React/Angular), API design, model evaluations, and student mentorship.' },
-    { name: 'Dinesh', role: 'Co-Founder & Systems Architect', initial: 'D', blurb: 'Leads distributed backend infrastructure, database performance (PostgreSQL/MySQL), and cloud deployments.' },
+  principles: [
+    { title: 'Full-Stack Mastery', tag: 'END-TO-END', desc: 'Crafting responsive client apps and high-performance server APIs with zero tech debt.' },
+    { title: 'Continuous Growth', tag: 'MENTORSHIP', desc: 'Empowering ambitious student engineers through real-world production mentorship.' },
   ],
 };
 
