@@ -203,72 +203,94 @@
       </p>
     </div>
 
-    <div class="projects-stack">
+    <div class="notched-projects-grid">
       @for (project of projects; track project.id; let i = $index) {
         <article
-          class="project-card"
-          [class.theme-navy]="project.theme === 'navy'"
-          [class.theme-cobalt]="project.theme === 'cobalt'"
-          [class.theme-offwhite]="project.theme === 'offwhite'"
+          class="notched-project-card group"
+          (click)="openProject(project)"
           appReveal
         >
-          <div class="project-details">
-            <div class="project-num-tag">
-              <span class="p-num">/{{ project.number }}</span>
-              <span class="p-blueprint">Case Blueprint</span>
+          <!-- Notch Cover Container -->
+          <div class="card-cover-wrapper">
+            <div class="card-cover">
+              <img
+                [src]="project.image"
+                [alt]="project.title"
+                class="cover-photo"
+                loading="lazy"
+              />
+              <div class="cover-overlay"></div>
+              
+              <!-- Top Pill Badge -->
+              <div class="cover-badge-row">
+                <span class="cover-badge">/{{ project.number }} · {{ project.badge }}</span>
+              </div>
+
+              <!-- Terminal Preview Overlay on Hover -->
+              <div class="cover-terminal-preview">
+                <div class="term-micro-header">
+                  <span class="m-dot r"></span>
+                  <span class="m-dot y"></span>
+                  <span class="m-dot g"></span>
+                  <span class="m-route">raventiq://{{ project.id }}</span>
+                </div>
+                <div class="term-micro-code">
+                  <code>const spec = await Raventiq.init({{ project.id }});</code>
+                </div>
+              </div>
             </div>
 
-            <h3 class="p-title">{{ project.title }}</h3>
-            <p class="p-sub">{{ project.subtitle }}</p>
-            <p class="p-desc">{{ project.description }}</p>
+            <!-- The Notch cutout block in bottom-right corner -->
+            <div class="notch-block" aria-hidden="true"></div>
+            <!-- Fillet curves at the edges where cut meets cover -->
+            <div class="notch-fillet fillet-top" aria-hidden="true"></div>
+            <div class="notch-fillet fillet-left" aria-hidden="true"></div>
 
-            <div class="p-metrics">
+            <!-- The circular Arrow Disc nested inside the notch -->
+            <button
+              type="button"
+              class="notch-arrow-disc"
+              aria-label="Explore Project Specs"
+              (click)="openProject(project); $event.stopPropagation()"
+            >
+              <span class="arrow-glyph">&nearr;</span>
+            </button>
+          </div>
+
+          <!-- Project Details -->
+          <div class="card-content">
+            <h3 class="card-title">{{ project.title }}</h3>
+            <p class="card-subtitle">{{ project.subtitle }}</p>
+            <p class="card-description">{{ project.description }}</p>
+
+            <!-- Metrics Row -->
+            <div class="card-metrics-row">
               @for (m of project.metrics; track m.label) {
-                <div class="m-box">
-                  <span class="m-val">{{ m.value }}</span>
-                  <span class="m-lbl">{{ m.label }}</span>
+                <div class="c-metric-item">
+                  <span class="c-metric-val">{{ m.value }}</span>
+                  <span class="c-metric-lbl">{{ m.label }}</span>
                 </div>
               }
             </div>
 
-            <div class="p-tags">
-              @for (t of project.tags; track t) {
-                <span class="tag-pill">{{ t }}</span>
-              }
-            </div>
+            <!-- Tags List -->
+            @if (project.tags.length > 0) {
+              <ul class="card-tags-list">
+                @for (t of project.tags; track t) {
+                  <li class="card-tag-pill">{{ t }}</li>
+                }
+              </ul>
+            }
 
-            <button type="button" class="btn p-cta" (click)="openProject(project)">
-              <span>Explore Project Specs</span>
-              <span aria-hidden="true">&nearr;</span>
-            </button>
-          </div>
-
-          <!-- Technical Terminal Mockup -->
-          <div class="project-terminal">
-            <div class="term-header">
-              <span class="t-dot dot-r"></span>
-              <span class="t-dot dot-y"></span>
-              <span class="t-dot dot-g"></span>
-              <span class="t-url">raventiq://architecture/{{ project.id }}</span>
-            </div>
-            <div class="term-body">
-              <div class="term-log">
-                <span class="log-ok">&bull; STATUS: OPTIMAL</span>
-                <span class="log-sub">LATENCY BENCHMARK: SUB-100MS</span>
-              </div>
-              <div class="term-code">
-                <code>
-                  const cluster = await Raventiq.init({{ project.id }});<br />
-                  cluster.streamReasoning(&#123; mode: 'deterministic' &#125;);
-                </code>
-              </div>
+            <div class="card-footer-trigger">
+              <span>Explore Project Blueprint</span>
+              <span class="action-arrow">&rarr;</span>
             </div>
           </div>
         </article>
       }
     </div>
-  </div>
-</section>
+  </div></section>
 
 <!-- =========================================
      02 / CORE TECH STACK (Horizontal Scrolling Carousel)
@@ -858,41 +880,83 @@
       </p>
     </div>
 
-    <!-- Interactive Accordion -->
-    <div class="faq-accordion" appReveal="160">
-      @for (item of faqs; track item.id; let idx = $index) {
-        <div class="faq-card" [class.open]="isFaqOpen(item.id)">
-          <button
-            type="button"
-            class="faq-header-btn"
-            (click)="toggleFaq(item.id)"
-            [attr.aria-expanded]="isFaqOpen(item.id)"
-            [attr.aria-controls]="'faq-panel-' + item.id"
-          >
-            <div class="faq-title-wrap">
-              <span class="faq-index">{{ pad(idx + 1) }}</span>
-              <span class="faq-cat-badge">{{ item.category }}</span>
-              <h3 class="faq-q-text">{{ item.question }}</h3>
-            </div>
-            <div class="faq-indicator" [class.is-open]="isFaqOpen(item.id)">
-              <span class="line-h"></span>
-              <span class="line-v"></span>
-            </div>
-          </button>
-
-          @if (isFaqOpen(item.id)) {
-            <div
-              [id]="'faq-panel-' + item.id"
-              class="faq-drawer"
-              role="region"
+    <!-- Interactive Accordion (2 Columns: Left 4 & Right 4) -->
+    <div class="faq-two-col-layout" appReveal="160">
+      
+      <!-- LEFT COLUMN (Questions 01 - 04) -->
+      <div class="faq-col faq-col-left">
+        @for (item of leftFaqs; track item.id; let idx = $index) {
+          <div class="faq-card" [class.open]="isFaqOpen(item.id)">
+            <button
+              type="button"
+              class="faq-header-btn"
+              (click)="toggleFaq(item.id)"
+              [attr.aria-expanded]="isFaqOpen(item.id)"
+              [attr.aria-controls]="'faq-panel-' + item.id"
             >
-              <div class="faq-body-text">
-                <p>{{ item.answer }}</p>
+              <div class="faq-title-wrap">
+                <span class="faq-index">{{ pad(idx + 1) }}</span>
+                <span class="faq-cat-badge">{{ item.category }}</span>
+                <h3 class="faq-q-text">{{ item.question }}</h3>
               </div>
-            </div>
-          }
-        </div>
-      }
+              <div class="faq-indicator" [class.is-open]="isFaqOpen(item.id)">
+                <span class="line-h"></span>
+                <span class="line-v"></span>
+              </div>
+            </button>
+
+            @if (isFaqOpen(item.id)) {
+              <div
+                [id]="'faq-panel-' + item.id"
+                class="faq-drawer"
+                role="region"
+              >
+                <div class="faq-body-text">
+                  <p>{{ item.answer }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- RIGHT COLUMN (Questions 05 - 08) -->
+      <div class="faq-col faq-col-right">
+        @for (item of rightFaqs; track item.id; let idx = $index) {
+          <div class="faq-card" [class.open]="isFaqOpen(item.id)">
+            <button
+              type="button"
+              class="faq-header-btn"
+              (click)="toggleFaq(item.id)"
+              [attr.aria-expanded]="isFaqOpen(item.id)"
+              [attr.aria-controls]="'faq-panel-' + item.id"
+            >
+              <div class="faq-title-wrap">
+                <span class="faq-index">{{ pad(idx + 5) }}</span>
+                <span class="faq-cat-badge">{{ item.category }}</span>
+                <h3 class="faq-q-text">{{ item.question }}</h3>
+              </div>
+              <div class="faq-indicator" [class.is-open]="isFaqOpen(item.id)">
+                <span class="line-h"></span>
+                <span class="line-v"></span>
+              </div>
+            </button>
+
+            @if (isFaqOpen(item.id)) {
+              <div
+                [id]="'faq-panel-' + item.id"
+                class="faq-drawer"
+                role="region"
+              >
+                <div class="faq-body-text">
+                  <p>{{ item.answer }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
     </div>
 
     <!-- Quick Help Strip -->

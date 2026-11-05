@@ -161,8 +161,10 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
     }));
   }
 
-  // Interactive FAQ Accordion
+  // Interactive FAQ Accordion (Split into Left 4 & Right 4)
   faqs = FAQS;
+  leftFaqs = FAQS.slice(0, 4);
+  rightFaqs = FAQS.slice(4, 8);
   openFaqId = signal<string | null>('faq-1');
 
   toggleFaq(id: string) {
